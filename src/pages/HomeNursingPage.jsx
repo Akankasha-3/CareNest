@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Clock, Calendar, DollarSign, CheckCircle } from 'lucide-react';
+import { Clock, Calendar, CheckCircle } from 'lucide-react';
 
 const HomeNursingPage = () => {
   const [selectedService, setSelectedService] = useState(null);
@@ -13,28 +13,28 @@ const HomeNursingPage = () => {
       id: 'elderly',
       title: 'Elderly Care',
       description: 'Compassionate care for seniors including assistance with daily activities.',
-      pricePerDay: 45,
+      pricePerDay: 1000,
       icon: <Clock size={24} />,
     },
     {
       id: 'postop',
       title: 'Post-Surgery Care',
       description: 'Specialized care for individuals recovering from surgery.',
-      pricePerDay: 55,
+      pricePerDay: 1000,
       icon: <CheckCircle size={24} />,
     },
     {
       id: 'chronic',
       title: 'Chronic Illness Care',
       description: 'Ongoing support for individuals with chronic conditions.',
-      pricePerDay: 50,
+      pricePerDay: 1500,
       icon: <CheckCircle size={24} />,
     },
     {
       id: 'disability',
       title: 'Disability Support',
       description: 'Assistance for individuals with disabilities.',
-      pricePerDay: 48,
+      pricePerDay:1500,
       icon: <CheckCircle size={24} />,
     },
   ];
@@ -84,7 +84,7 @@ const HomeNursingPage = () => {
                     <h3 className="text-lg font-semibold">{service.title}</h3>
                   </div>
                   <p className="text-gray-600 text-sm mb-3">{service.description}</p>
-                  <p className="text-primary font-semibold">${service.pricePerDay} / day</p>
+                  <p className="text-primary font-semibold">₹{service.pricePerDay} / day</p>
                 </div>
               ))}
             </div>
