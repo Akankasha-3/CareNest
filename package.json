@@ -10,12 +10,12 @@
   "scripts": {
     "dev": "vite",
     "dev:full": "concurrently \"npm run dev\" \"npm run server:dev\"",
-    "server": "node server/server.cjs",
-    "server:dev": "nodemon server/server.cjs",
+    "server": "node server/server.js",
+    "server:dev": "nodemon server/server.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node server/server.cjs",
+    "start": "node server/server.js",
     "postinstall": "vite build"
   },
   "dependencies": {
