@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 
 class ApiClient {
   constructor(baseURL) {
@@ -21,6 +22,7 @@ class ApiClient {
     try {
       const response = await fetch(url, config);
       const data = await response.json();
+      console.log(data)
 
       if (!response.ok) {
         throw new Error(data.message || `HTTP error! status: ${response.status}`);
@@ -30,6 +32,7 @@ class ApiClient {
     } catch (error) {
       if (error instanceof TypeError && error.message.includes('fetch')) {
         throw new Error('Unable to connect to server. Please check your internet connection.');
+        console.log(error)
       }
       throw error;
     }
@@ -39,8 +42,10 @@ class ApiClient {
     try {
       const response = await this.request('/auth/register', {
         method: 'POST',
+        content: 'application/json',
         body: JSON.stringify(userData),
       });
+      // console.log(response)
 
       if (response.token) {
         localStorage.setItem('token', response.token);
@@ -59,7 +64,7 @@ class ApiClient {
         method: 'POST',
         body: JSON.stringify(credentials),
       });
-
+      // console.log(response)
       if (response.token) {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));

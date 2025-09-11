@@ -1,9 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 
 // Middleware
@@ -11,7 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/caretakers';
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URL;
+console.log('MongoDB URI:', MONGODB_URI);
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
@@ -63,7 +65,7 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: 'No token provided' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+  const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
     const user = await User.findById(decoded.userId).select('-password');
     
     if (!user) {
@@ -95,8 +97,10 @@ app.post('/api/companionship', auth, async (req, res) => {
     await companionship.save();
     res.status(201).json({ message: 'Companionship request submitted', companionship });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
+  console.error(error); 
+  res.status(500).json({ message: 'Server error' });
+}
+
 });
 
 // Home Nursing Service Request
@@ -121,7 +125,7 @@ app.post('/api/home-nursing', auth, async (req, res) => {
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password, phone, userType } = req.body;
-
+    console.log(req.body);
     if (!name || !email || !password || !phone) {
       return res.status(400).json({ message: 'All fields are required' });
     }
@@ -137,7 +141,7 @@ app.post('/api/auth/register', async (req, res) => {
     const token = jwt.sign(
       { userId: user._id }, 
       process.env.JWT_SECRET || 'fallback-secret',
-      { expiresIn: '7d' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
     res.status(201).json({
@@ -152,6 +156,7 @@ app.post('/api/auth/register', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -177,7 +182,7 @@ app.post('/api/auth/login', async (req, res) => {
     const token = jwt.sign(
       { userId: user._id }, 
       process.env.JWT_SECRET || 'fallback-secret',
-      { expiresIn: '7d' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
     res.json({
@@ -192,6 +197,7 @@ app.post('/api/auth/login', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 });

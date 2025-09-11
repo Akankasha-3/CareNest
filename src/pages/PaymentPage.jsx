@@ -46,11 +46,11 @@ const PaymentPage = () => {
                   </div>
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-600">Duration:</span>
-                    <span className="font-medium">{duration} days</span>
+                    <span className="font-medium">{service === 'companionship' ? `${duration} sessions` : `${duration} days`}</span>
                   </div>
                   <div className="flex justify-between pt-2 border-t">
                     <span className="text-gray-800 font-semibold">Total Amount:</span>
-                    <span className="text-primary font-bold">${totalAmount.toFixed(2)}</span>
+                    <span className="text-primary font-bold">₹{totalAmount.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -60,7 +60,7 @@ const PaymentPage = () => {
                   type="submit"
                   className="w-full bg-primary text-white py-3 rounded-md font-medium hover:bg-primary-dark transition-colors"
                 >
-                  Pay ${totalAmount.toFixed(2)}
+                  Pay ₹{totalAmount.toFixed(2)}
                 </button>
               </form>
             </div>
@@ -71,7 +71,7 @@ const PaymentPage = () => {
               </div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Payment Successful!</h2>
               <p className="text-gray-600 mb-6">
-                Thank you for your payment of ${totalAmount.toFixed(2)}.
+                Thank you for your payment of ₹{totalAmount.toFixed(2)}.
               </p>
               <a
                 href="/"

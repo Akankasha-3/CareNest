@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Clock, Calendar, DollarSign, CheckCircle } from 'lucide-react';
+import { Clock, Calendar, CheckCircle } from 'lucide-react';
 
 const HomeNursingPage = () => {
   const [selectedService, setSelectedService] = useState(null);
@@ -13,28 +13,28 @@ const HomeNursingPage = () => {
       id: 'elderly',
       title: 'Elderly Care',
       description: 'Compassionate care for seniors including assistance with daily activities.',
-      pricePerDay: 45,
+      pricePerDay: 1000,
       icon: <Clock size={24} />,
     },
     {
       id: 'postop',
       title: 'Post-Surgery Care',
       description: 'Specialized care for individuals recovering from surgery.',
-      pricePerDay: 55,
+      pricePerDay: 1000,
       icon: <CheckCircle size={24} />,
     },
     {
       id: 'chronic',
       title: 'Chronic Illness Care',
       description: 'Ongoing support for individuals with chronic conditions.',
-      pricePerDay: 50,
+      pricePerDay: 1500,
       icon: <CheckCircle size={24} />,
     },
     {
       id: 'disability',
       title: 'Disability Support',
       description: 'Assistance for individuals with disabilities.',
-      pricePerDay: 48,
+      pricePerDay:1500,
       icon: <CheckCircle size={24} />,
     },
   ];
@@ -84,58 +84,58 @@ const HomeNursingPage = () => {
                     <h3 className="text-lg font-semibold">{service.title}</h3>
                   </div>
                   <p className="text-gray-600 text-sm mb-3">{service.description}</p>
-                  <p className="text-primary font-semibold">${service.pricePerDay} / day</p>
+                  <p className="text-primary font-semibold">₹{service.pricePerDay} / day</p>
                 </div>
               ))}
             </div>
             
             {selectedService && (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-1">
-                    Duration (Days)
-                  </label>
-                  <div className="flex items-center">
-                    <button
-                      type="button"
-                      className="px-3 py-2 bg-gray-200 rounded-l-md"
-                      onClick={() => setDuration(Math.max(1, duration - 1))}
-                    >
-                      -
-                    </button>
-                    <input
-                      id="duration"
-                      type="number"
-                      min="1"
-                      value={duration}
-                      onChange={(e) => setDuration(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="w-16 text-center border-y border-gray-200 py-2"
-                    />
-                    <button
-                      type="button"
-                      className="px-3 py-2 bg-gray-200 rounded-r-md"
-                      onClick={() => setDuration(duration + 1)}
-                    >
-                      +
-                    </button>
-                  </div>
+              <div className="mt-8 p-6 border rounded-lg bg-white shadow-md">
+                <h3 className="text-xl font-bold mb-2">
+                  {nursingServices.find(s => s.id === selectedService)?.title}
+                </h3>
+                <p className="mb-4">
+                  {nursingServices.find(s => s.id === selectedService)?.description}
+                </p>
+                <div className="mb-4">
+                  <label className="font-semibold mr-2">Duration (days):</label>
+                  <select
+                    value={duration}
+                    onChange={e => setDuration(Number(e.target.value))}
+                    className="border rounded px-2 py-1"
+                  >
+                    {[1,2,3,4,5,6,7,8,9,10].map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
                 </div>
-                
-                <div>
-                  <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-                    Start Date
-                  </label>
+                <div className="mb-4">
+                  <label className="font-semibold mr-2">Start Date:</label>
                   <input
                     id="date"
                     type="date"
                     required
                     value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                    onChange={e => setSelectedDate(e.target.value)}
+                    className="border rounded px-2 py-1"
                     min={new Date().toISOString().split('T')[0]}
                   />
                 </div>
-              </form>
+                <div className="mb-4">
+                  <span className="font-semibold">Total Amount: </span>
+                  ₹{nursingServices.find(s => s.id === selectedService)?.pricePerDay * duration}
+                </div>
+                <button
+                  type="button"
+                  className="bg-primary text-white px-6 py-2 rounded hover:bg-primary-dark transition"
+                  onClick={() => {
+                    const price = nursingServices.find(s => s.id === selectedService)?.pricePerDay * duration;
+                    window.location.href = `/payment?service=home-nursing&type=${selectedService}&duration=${duration}&total=${price}`;
+                  }}
+                >
+                  Proceed to Pay
+                </button>
+              </div>
             )}
           </div>
           
@@ -159,17 +159,8 @@ const HomeNursingPage = () => {
                   
                   <div className="mb-6">
                     <p className="text-gray-600 mb-2">Total Price:</p>
-                    <p className="text-xl font-bold text-primary">${calculateTotalPrice().toFixed(2)}</p>
+                    <p className="text-xl font-bold text-primary">₹{nursingServices.find(s => s.id === selectedService)?.pricePerDay * duration}</p>
                   </div>
-                  
-                  <button
-                    type="submit"
-                    onClick={handleSubmit}
-                    className="w-full bg-primary text-white py-3 px-4 rounded-md hover:bg-primary-dark transition-colors font-medium flex items-center justify-center"
-                  >
-                    <DollarSign size={18} className="mr-2" />
-                    Proceed to Payment
-                  </button>
                 </>
               ) : (
                 <p className="text-gray-500">Please select a service to see pricing details.</p>
