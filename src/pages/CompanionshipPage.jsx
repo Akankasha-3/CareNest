@@ -31,6 +31,15 @@ const CompanionshipPage = () => {
     return service ? service.price * duration : 0;
   };
 
+  const navigateToPayment = (serviceParam, typeParam, durationParam, totalParam) => {
+    const url = `/payment?service=${encodeURIComponent(serviceParam)}&type=${encodeURIComponent(typeParam)}&duration=${encodeURIComponent(durationParam)}&total=${encodeURIComponent(totalParam)}`;
+    
+    window.history.pushState({}, "", url);
+    // Dispatch popstate so App.tsx's listener reacts and renders PaymentPage
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar currentPage="Companionship" />
@@ -124,7 +133,8 @@ const CompanionshipPage = () => {
                   className="bg-accent text-white px-6 py-2 rounded hover:bg-accent-dark transition"
                   onClick={() => {
                     const total = calculateTotal();
-                    window.location.href = `/payment?service=companionship&type=${selectedService}&duration=${duration}&total=${total}`;
+                    //  client-side navigation 
+                    navigateToPayment("companionship", selectedService, duration, total);
                   }}
                 >
                   Proceed to Pay
