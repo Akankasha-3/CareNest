@@ -45,9 +45,17 @@ const HomeNursingPage = () => {
     return service ? service.pricePerDay * duration : 0;
   };
   
+  const navigateToPayment = (serviceParam, typeParam, durationParam, totalParam) => {
+    const url = `/payment?service=${encodeURIComponent(serviceParam)}&type=${encodeURIComponent(typeParam)}&duration=${encodeURIComponent(durationParam)}&total=${encodeURIComponent(totalParam)}`;
+    // client-side navigation: update URL and notify  app router
+    window.history.pushState({}, '', url);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.location.href = `/payment?service=${selectedService}&duration=${duration}&total=${calculateTotalPrice()}`;
+    navigateToPayment(selectedService, selectedService, duration, calculateTotalPrice());
   };
   
   return (
@@ -130,7 +138,7 @@ const HomeNursingPage = () => {
                   className="bg-primary text-white px-6 py-2 rounded hover:bg-primary-dark transition"
                   onClick={() => {
                     const price = nursingServices.find(s => s.id === selectedService)?.pricePerDay * duration;
-                    window.location.href = `/payment?service=home-nursing&type=${selectedService}&duration=${duration}&total=${price}`;
+                    navigateToPayment('home-nursing', selectedService, duration, price);
                   }}
                 >
                   Proceed to Pay
